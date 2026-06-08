@@ -1,0 +1,74 @@
+<%- include('../partials/header') %>
+
+<main class="form-page">
+  <div class="form-container">
+    <div class="form-header">
+      <a href="/student/dashboard" class="back-link">← Back</a>
+      <h1>Submit a <span class="text-accent">Complaint</span></h1>
+      <p>Describe the issue and we'll get a technician on it</p>
+    </div>
+
+    <% if (error) { %>
+      <div class="alert alert-error"><span>⚠</span> <%= error %></div>
+    <% } %>
+
+    <form method="POST" action="/student/submit" class="complaint-form">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="category">Service Category *</label>
+          <select id="category" name="category" required>
+            <option value="">-- Select Category --</option>
+            <option value="electricity">⚡ Electricity</option>
+            <option value="plumbing">🚿 Plumbing</option>
+            <option value="internet">📶 Internet / Network</option>
+            <option value="hvac">❄️ HVAC / Air Conditioning</option>
+            <option value="furniture">🪑 Furniture / Fixtures</option>
+            <option value="security">🔒 Security / Locks</option>
+            <option value="other">🔧 Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="priority">Priority Level *</label>
+          <select id="priority" name="priority" required>
+            <option value="low">🟢 Low — Not urgent</option>
+            <option value="medium" selected>🟡 Medium — Affects work mildly</option>
+            <option value="high">🟠 High — Significantly affecting work</option>
+            <option value="urgent">🔴 Urgent — Emergency / Safety issue</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="title">Complaint Title *</label>
+        <input type="text" id="title" name="title" placeholder="e.g. Lab 3 projector not working" 
+          maxlength="100" required value="<%= typeof formData !== 'undefined' ? formData.title || '' : '' %>" />
+        <span class="field-hint">Keep it short and clear (max 100 chars)</span>
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location *</label>
+        <input type="text" id="location" name="location" 
+          placeholder="e.g. Block A, Room 204 / Male Hostel Block 2" 
+          required value="<%= typeof formData !== 'undefined' ? formData.location || '' : '' %>" />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Detailed Description *</label>
+        <textarea id="description" name="description" rows="5" 
+          placeholder="Describe the problem in detail. When did it start? What happens? Any specific details that might help the technician..." 
+          required minlength="10"><%= typeof formData !== 'undefined' ? formData.description || '' : '' %></textarea>
+        <span class="field-hint">More detail = faster resolution</span>
+      </div>
+
+      <div class="form-actions">
+        <a href="/student/dashboard" class="btn-outline">Cancel</a>
+        <button type="submit" class="btn-primary">Submit Complaint →</button>
+      </div>
+
+    </form>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

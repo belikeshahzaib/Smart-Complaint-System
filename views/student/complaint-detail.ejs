@@ -1,0 +1,108 @@
+<%- include('../partials/header') %>
+
+<main class="detail-page">
+  <a href="/student/my-complaints" class="back-link">← Back to My Complaints</a>
+
+  <div class="detail-grid">
+    <!-- Main Info -->
+    <div class="detail-main">
+      <div class="detail-card">
+        <div class="detail-top">
+          <span class="cat-pill cat-<%= complaint.category %>"><%= complaint.category %></span>
+          <span class="status-pill status-<%= complaint.status %>"><%= complaint.status.replace('_',' ') %></span>
+          <span class="priority-pill pri-<%= complaint.priority %>"><%= complaint.priority %></span>
+        </div>
+        <h1><%= complaint.title %></h1>
+        <p class="detail-location">📍 <%= complaint.location %></p>
+        <div class="detail-section">
+          <h3>Description</h3>
+          <p><%= complaint.description %></p>
+        </div>
+
+        <% if (complaint.admin_notes) { %>
+        <div class="detail-section tech-notes">
+          <h3>🔧 Technician Notes</h3>
+          <p><%= complaint.admin_notes %></p>
+        </div>
+        <% } %>
+      </div>
+
+      <!-- Feedback Section -->
+      <% if (['resolved','closed'].includes(complaint.status)) { %>
+        <% if (!existingFeedback) { %>
+          <div class="detail-card feedback-card">
+            <h3>⭐ Rate This Service</h3>
+            <p>Your complaint was resolved! Please rate the service quality.</p>
+            <form method="POST" action="/student/feedback/<%= complaint.id %>" class="feedback-form">
+              <div class="star-rating">
+                <input type="radio" name="rating" id="s5" value="5" required /><label for="s5">★</label>
+                <input type="radio" name="rating" id="s4" value="4" /><label for="s4">★</label>
+                <input type="radio" name="rating" id="s3" value="3" /><label for="s3">★</label>
+                <input type="radio" name="rating" id="s2" value="2" /><label for="s2">★</label>
+                <input type="radio" name="rating" id="s1" value="1" /><label for="s1">★</label>
+              </div>
+              <textarea name="comment" placeholder="Optional: Any comments about the service..." rows="3"></textarea>
+              <button type="submit" class="btn-primary">Submit Feedback</button>
+            </form>
+          </div>
+        <% } else { %>
+          <div class="detail-card feedback-card done">
+            <h3>⭐ Your Feedback</h3>
+            <div class="star-display">
+              <% for(let i=1;i<=5;i++) { %><span class="<%= i <= existingFeedback.rating ? 'star-filled' : 'star-empty' %>">★</span><% } %>
+              <span class="rating-num"><%= existingFeedback.rating %>/5</span>
+            </div>
+            <% if (existingFeedback.comment) { %><p class="feedback-comment">"<%= existingFeedback.comment %>"</p><% } %>
+          </div>
+        <% } %>
+      <% } %>
+    </div>
+
+    <!-- Sidebar Info -->
+    <div class="detail-side">
+      <div class="detail-card side-info">
+        <h3>Complaint Details</h3>
+        <div class="info-row"><span>ID</span><strong>#<%= complaint.id %></strong></div>
+        <div class="info-row"><span>Submitted</span><strong><%= new Date(complaint.created_at).toLocaleDateString('en-PK', {day:'numeric',month:'short',year:'numeric'}) %></strong></div>
+        <div class="info-row"><span>Last Updated</span><strong><%= new Date(complaint.updated_at).toLocaleDateString('en-PK', {day:'numeric',month:'short',year:'numeric'}) %></strong></div>
+
+        <% if (complaint.technician_name) { %>
+          <div class="info-row"><span>Assigned To</span><strong>🔧 <%= complaint.technician_name %></strong></div>
+        <% } else { %>
+          <div class="info-row"><span>Assigned To</span><strong class="muted">Not yet assigned</strong></div>
+        <% } %>
+
+        <% if (complaint.estimated_fix_time) { %>
+          <div class="info-row eta-row">
+            <span>Estimated Fix</span>
+            <strong>⏱ <%= new Date(complaint.estimated_fix_time).toLocaleDateString('en-PK', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) %></strong>
+          </div>
+        <% } %>
+
+        <% if (complaint.actual_fix_time) { %>
+          <div class="info-row resolved-row">
+            <span>Resolved On</span>
+            <strong>✅ <%= new Date(complaint.actual_fix_time).toLocaleDateString('en-PK', {day:'numeric',month:'short',year:'numeric'}) %></strong>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Status Timeline -->
+      <div class="detail-card side-timeline">
+        <h3>Status Progress</h3>
+        <div class="timeline">
+          <% const stages = ['open','assigned','in_progress','resolved']; %>
+          <% const currentIdx = stages.indexOf(complaint.status); %>
+          <% stages.forEach((stage, i) => { %>
+          <div class="tl-step <%= i <= currentIdx ? 'tl-done' : '' %>">
+            <div class="tl-dot"></div>
+            <span><%= stage.replace('_',' ').replace(/\b\w/g, c => c.toUpperCase()) %></span>
+          </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

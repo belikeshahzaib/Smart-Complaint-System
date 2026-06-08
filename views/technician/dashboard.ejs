@@ -1,0 +1,99 @@
+<%- include('../partials/header') %>
+
+<main class="dashboard-page">
+  <div class="dash-header">
+    <div>
+      <h1>Technician <span class="text-accent">Dashboard</span> 🔧</h1>
+      <p class="dash-subtitle">Manage and resolve service complaints</p>
+    </div>
+    <div class="tech-stats-mini">
+      <span>Active: <strong><%= stats.active || 0 %></strong></span>
+      <span>Resolved by me: <strong><%= stats.resolved_by_me || 0 %></strong></span>
+    </div>
+  </div>
+
+  <!-- My Active Complaints -->
+  <% if (myComplaints.length > 0) { %>
+  <section class="section-card urgent-section">
+    <div class="section-card-header">
+      <h2>🔴 My Active Complaints (<%= myComplaints.length %>)</h2>
+      <a href="/technician/resolved" class="link-all">View Resolved →</a>
+    </div>
+    <div class="complaints-cards">
+      <% myComplaints.forEach(c => { %>
+      <div class="complaint-card cc-<%= c.status %>">
+        <div class="cc-top">
+          <span class="cat-pill cat-<%= c.category %>"><%= c.category %></span>
+          <span class="status-pill status-<%= c.status %>"><%= c.status.replace('_', ' ') %></span>
+          <span class="priority-pill pri-<%= c.priority %>"><%= c.priority %></span>
+        </div>
+        <h3 class="cc-title"><%= c.title %></h3>
+        <p class="cc-location">📍 <%= c.location %></p>
+        <p class="cc-reporter">👤 <%= c.student_name %></p>
+        <% if (c.estimated_fix_time) { %>
+          <p class="cc-eta">⏱ ETA: <strong><%= new Date(c.estimated_fix_time).toLocaleString('en-PK') %></strong></p>
+        <% } else { %>
+          <p class="cc-eta no-eta">⚠ No estimated time set</p>
+        <% } %>
+        <div class="cc-footer">
+          <span class="cc-date"><%= new Date(c.created_at).toLocaleDateString('en-PK') %></span>
+          <a href="/technician/complaint/<%= c.id %>" class="btn-primary btn-sm">Update →</a>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </section>
+  <% } %>
+
+  <!-- Open/Unassigned Complaints -->
+  <section class="section-card">
+    <div class="section-card-header">
+      <h2>📋 Open Complaints (<%= openComplaints.length %>)</h2>
+    </div>
+
+    <% if (openComplaints.length === 0) { %>
+      <div class="empty-state">
+        <div class="empty-icon">✅</div>
+        <p>All caught up! No open complaints right now.</p>
+      </div>
+    <% } else { %>
+      <div class="complaints-table-wrap">
+        <table class="complaints-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Priority</th>
+              <th>Location</th>
+              <th>Reported By</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% openComplaints.forEach(c => { %>
+            <tr class="row-pri-<%= c.priority %>">
+              <td><span class="complaint-id">#<%= c.id %></span></td>
+              <td class="complaint-title"><%= c.title %></td>
+              <td><span class="cat-pill cat-<%= c.category %>"><%= c.category %></span></td>
+              <td><span class="priority-pill pri-<%= c.priority %>"><%= c.priority %></span></td>
+              <td><%= c.location %></td>
+              <td><%= c.student_name %></td>
+              <td class="date-col"><%= new Date(c.created_at).toLocaleDateString('en-PK') %></td>
+              <td class="action-col">
+                <a href="/technician/complaint/<%= c.id %>" class="btn-sm">View</a>
+                <form method="POST" action="/technician/take/<%= c.id %>" style="display:inline">
+                  <button type="submit" class="btn-sm btn-take" onclick="return confirm('Take this complaint?')">Take It</button>
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </section>
+</main>
+
+<%- include('../partials/footer') %>

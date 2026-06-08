@@ -1,0 +1,79 @@
+<%- include('../partials/header') %>
+
+<main class="dashboard-page">
+  <div class="dash-header">
+    <div>
+      <h1>Welcome back, <span class="text-accent"><%= session.fullName.split(' ')[0] %></span> 👋</h1>
+      <p class="dash-subtitle">Track and manage your service complaints</p>
+    </div>
+    <a href="/student/submit" class="btn-primary">+ New Complaint</a>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card total">
+      <div class="stat-num"><%= stats.total || 0 %></div>
+      <div class="stat-label">Total Submitted</div>
+    </div>
+    <div class="stat-card open">
+      <div class="stat-num"><%= stats.open_count || 0 %></div>
+      <div class="stat-label">Open</div>
+    </div>
+    <div class="stat-card progress">
+      <div class="stat-num"><%= stats.in_progress_count || 0 %></div>
+      <div class="stat-label">In Progress</div>
+    </div>
+    <div class="stat-card resolved">
+      <div class="stat-num"><%= stats.resolved_count || 0 %></div>
+      <div class="stat-label">Resolved</div>
+    </div>
+  </div>
+
+  <!-- Recent Complaints -->
+  <section class="section-card">
+    <div class="section-card-header">
+      <h2>Recent Complaints</h2>
+      <a href="/student/my-complaints" class="link-all">View All →</a>
+    </div>
+
+    <% if (complaints.length === 0) { %>
+      <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        <p>No complaints yet. <a href="/student/submit">Submit your first complaint</a></p>
+      </div>
+    <% } else { %>
+      <div class="complaints-table-wrap">
+        <table class="complaints-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Technician</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% complaints.forEach(c => { %>
+            <tr>
+              <td><span class="complaint-id">#<%= c.id %></span></td>
+              <td class="complaint-title"><%= c.title %></td>
+              <td><span class="cat-pill cat-<%= c.category %>"><%= c.category %></span></td>
+              <td><span class="priority-pill pri-<%= c.priority %>"><%= c.priority %></span></td>
+              <td><span class="status-pill status-<%= c.status %>"><%= c.status.replace('_', ' ') %></span></td>
+              <td><%= c.technician_name || '—' %></td>
+              <td class="date-col"><%= new Date(c.created_at).toLocaleDateString('en-PK') %></td>
+              <td><a href="/student/complaint/<%= c.id %>" class="btn-sm">View</a></td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </section>
+</main>
+
+<%- include('../partials/footer') %>

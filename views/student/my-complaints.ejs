@@ -1,0 +1,51 @@
+<%- include('../partials/header') %>
+
+<main class="dashboard-page">
+  <div class="dash-header">
+    <div>
+      <h1>My <span class="text-accent">Complaints</span></h1>
+      <p class="dash-subtitle">All complaints you have submitted</p>
+    </div>
+    <a href="/student/submit" class="btn-primary">+ New Complaint</a>
+  </div>
+
+  <% if (success) { %>
+    <div class="alert alert-success"><span>✓</span> <%= success %></div>
+  <% } %>
+
+  <% if (complaints.length === 0) { %>
+    <div class="empty-state big">
+      <div class="empty-icon">📋</div>
+      <h3>No complaints yet</h3>
+      <p>You haven't submitted any complaints. When you do, they'll show up here.</p>
+      <a href="/student/submit" class="btn-primary">Submit First Complaint</a>
+    </div>
+  <% } else { %>
+    <div class="complaints-cards">
+      <% complaints.forEach(c => { %>
+      <div class="complaint-card cc-<%= c.status %>">
+        <div class="cc-top">
+          <span class="cat-pill cat-<%= c.category %>"><%= c.category %></span>
+          <span class="status-pill status-<%= c.status %>"><%= c.status.replace('_', ' ') %></span>
+        </div>
+        <h3 class="cc-title"><%= c.title %></h3>
+        <p class="cc-location">📍 <%= c.location %></p>
+        <p class="cc-desc"><%= c.description.substring(0, 100) %><%= c.description.length > 100 ? '...' : '' %></p>
+        <div class="cc-meta">
+          <span class="priority-pill pri-<%= c.priority %>"><%= c.priority %></span>
+          <% if (c.technician_name) { %><span class="cc-tech">🔧 <%= c.technician_name %></span><% } %>
+          <% if (c.estimated_fix_time) { %>
+            <span class="cc-eta">⏱ ETA: <%= new Date(c.estimated_fix_time).toLocaleDateString('en-PK') %></span>
+          <% } %>
+        </div>
+        <div class="cc-footer">
+          <span class="cc-date"><%= new Date(c.created_at).toLocaleDateString('en-PK', {day:'numeric', month:'short', year:'numeric'}) %></span>
+          <a href="/student/complaint/<%= c.id %>" class="btn-sm">Details →</a>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  <% } %>
+</main>
+
+<%- include('../partials/footer') %>

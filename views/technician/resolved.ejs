@@ -1,0 +1,59 @@
+<%- include('../partials/header') %>
+
+<main class="dashboard-page">
+  <div class="dash-header">
+    <div>
+      <h1>Resolved <span class="text-accent">Complaints</span></h1>
+      <p class="dash-subtitle">Complaints you have successfully resolved</p>
+    </div>
+    <a href="/technician/dashboard" class="btn-outline">← Dashboard</a>
+  </div>
+
+  <% if (resolved.length === 0) { %>
+    <div class="empty-state big">
+      <div class="empty-icon">🔧</div>
+      <h3>No resolved complaints yet</h3>
+      <p>Once you resolve a complaint from the dashboard, it will appear here.</p>
+      <a href="/technician/dashboard" class="btn-primary">Go to Dashboard</a>
+    </div>
+  <% } else { %>
+    <div class="complaints-table-wrap">
+      <table class="complaints-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Student</th>
+            <th>Resolved On</th>
+            <th>Rating</th>
+            <th>Feedback</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% resolved.forEach(c => { %>
+          <tr>
+            <td><span class="complaint-id">#<%= c.id %></span></td>
+            <td class="complaint-title"><%= c.title %></td>
+            <td><span class="cat-pill cat-<%= c.category %>"><%= c.category %></span></td>
+            <td><%= c.student_name %></td>
+            <td class="date-col"><%= c.actual_fix_time ? new Date(c.actual_fix_time).toLocaleDateString('en-PK') : '—' %></td>
+            <td>
+              <% if (c.rating) { %>
+                <span class="star-score"><%= '★'.repeat(c.rating) %><%= '☆'.repeat(5 - c.rating) %> (<%= c.rating %>/5)</span>
+              <% } else { %>
+                <span class="muted">—</span>
+              <% } %>
+            </td>
+            <td class="feedback-col"><%= c.comment || '—' %></td>
+            <td><a href="/technician/complaint/<%= c.id %>" class="btn-sm">View</a></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</main>
+
+<%- include('../partials/footer') %>

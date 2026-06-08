@@ -1,0 +1,64 @@
+<%- include('../partials/header') %>
+
+<main class="auth-page">
+  <div class="auth-container">
+    <div class="auth-left">
+      <div class="auth-brand">
+        <span class="auth-icon">⚙</span>
+        <h1>ComplainTrack</h1>
+        <p>Smart Complaint & Service Management</p>
+        <p class="auth-uni">FAST NUCES Karachi</p>
+      </div>
+    </div>
+
+    <div class="auth-right">
+      <div class="auth-box">
+        <h2>Welcome Back</h2>
+        <p class="auth-tagline">Sign in to your account</p>
+
+        <% if (error) { %>
+          <div class="alert alert-error"><span>⚠</span> <%= error %></div>
+        <% } %>
+        <% if (success) { %>
+          <div class="alert alert-success"><span>✓</span> <%= success %></div>
+        <% } %>
+
+        <form method="POST" action="/login" class="auth-form">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="yourname@nu.edu.pk" required autocomplete="email" />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="pass-wrap">
+              <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password" />
+              <button type="button" class="toggle-pass" onclick="togglePassword('password', this)">👁</button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit">Sign In</button>
+        </form>
+
+        <p class="auth-switch">
+          Don't have an account? <a href="/signup">Sign Up</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+function togglePassword(id, btn) {
+  const input = document.getElementById(id);
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁';
+  }
+}
+</script>
+
+<%- include('../partials/footer') %>
