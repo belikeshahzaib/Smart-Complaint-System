@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # 🚀 Smart Complaint System — Setup Guide
 **FAST NUCES | Areeba Imran (24K-0005) & Shahzaib Zaheer (24K-0040)**
 
