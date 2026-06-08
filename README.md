@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🚀 Smart Complaint System — Setup Guide
 **FAST NUCES | Areeba Imran (24K-0005) & Shahzaib Zaheer (24K-0040)**
 
@@ -191,3 +192,6 @@ To view the database, you can install **DB Browser for SQLite**: https://sqliteb
 - **Authentication**: Session-based with bcrypt password hashing
 - **No external APIs** required
 - Runs 100% locally — no internet needed after `npm install`
+=======
+# Smart-Complaint-System
+>>>>>>> 3d644fced0dd16cbc5f1257bf176be2203f6cacb
